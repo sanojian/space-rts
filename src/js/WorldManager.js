@@ -20,6 +20,20 @@ class WorldManager {
 		
 	}
 
+	targetShip(enemy) {
+
+		for (let i = 0; i < this.ships.length; i++) {
+			const ship = this.ships[i];
+
+			if (ship.isSelected()) {
+
+				ship.setTarget(enemy);
+
+			}
+		}
+
+	}
+
 	setDestination(x, y) {
 
 		for (let i = 0; i < this.ships.length; i++) {
@@ -65,6 +79,8 @@ class WorldManager {
 		// commands in progress
 		if (this.scene.playfield.data.get('isDrawing')) {
 
+			this.scene.playfield.lineStyle(1, 0x00ff00);
+
 			const currentPoint = this.scene.playfield.data.get('currentPoint');
 
 			this.scene.playfield.moveTo(currentPoint.x, currentPoint.y);
@@ -73,9 +89,11 @@ class WorldManager {
 			this.scene.playfield.strokePath();
 		}
 
-		// active commands
+		// command queue
 		for (let i = 0; i < this.ships.length; i++) {
 			const ship = this.ships[i];
+
+			this.scene.playfield.lineStyle(1, 0x00ff00);
 
 			for (let j = 0; j < ship.destinations.length; j++) {
 
@@ -91,6 +109,17 @@ class WorldManager {
 
 			}
 
+			this.scene.playfield.lineStyle(3, 0xff0000);
+
+			if (ship.shipTargeting) {
+
+				this.scene.playfield.strokeCircle(
+					ship.shipTargeting.enemy.x - this.scene.cameras.main.scrollX,
+					ship.shipTargeting.enemy.y - this.scene.cameras.main.scrollY,
+					56
+				);
+
+			}
 		}
 
 	}

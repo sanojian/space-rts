@@ -25,9 +25,9 @@ class PlayScene extends Phaser.Scene {
 			
 		this.createInteractiveArea();
 
-		this.worldMan.ships.push(new PlayerShip(this, 100, 100, 'ship_player'));
-		this.worldMan.ships.push(new PlayerShip(this, 300, 500, 'ship_player'));
-		this.worldMan.enemies.push(new EnemyShip(this, 500, 400, 'ship_player'));
+		this.worldMan.ships.push(new PlayerShip(this, 100, 100));
+		this.worldMan.ships.push(new PlayerShip(this, 300, 500));
+		this.worldMan.enemies.push(new EnemyShip(this, 500, 400));
 
 		this.scene.launch('ui');
 
@@ -63,6 +63,7 @@ class PlayScene extends Phaser.Scene {
 			.on('pointerdown', (pointer) => {
 
 				if (pointer.rightButtonDown()) {
+					// move camera
 					playfield.data.set('dragScreenOrigin', new Phaser.Math.Vector2(pointer.x, pointer.y));
 				}
 				else {
@@ -75,6 +76,7 @@ class PlayScene extends Phaser.Scene {
 			.on('pointermove', (pointer) => {
 
 				if (pointer.rightButtonDown()) {
+					// move camera
 
 					const dragScreenOrigin = playfield.data.get('dragScreenOrigin');
 
@@ -90,10 +92,7 @@ class PlayScene extends Phaser.Scene {
 			})
 			.on('pointerup', (pointer) => {
 
-				if (pointer.rightButtonDown()) {
-
-				}
-				else {
+				if (!pointer.rightButtonDown()) {
 					if (this.playfield.data.get('isDrawing')) {
 
 						const currentPoint = this.playfield.data.get('currentPoint');
@@ -101,11 +100,11 @@ class PlayScene extends Phaser.Scene {
 						const dist = Phaser.Math.Distance.BetweenPoints(currentPoint, pointer);
 
 						// make sure angle was deliberate
-						if (dist > 60) {
+						if (dist > 20) {
 							this.worldMan.setDesiredAngle(angle);
 						}
 						else {
-							// keep exisint rotation
+							// keep existing rotation
 							this.worldMan.setDesiredAngle();
 						}
 					}

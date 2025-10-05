@@ -18,12 +18,15 @@ class Ship extends Phaser.GameObjects.Container {
 		
 		this.destinations = [];
 		this.desiredAngles = [];
+		this.targetShip = undefined;
 
 	}
 
 	setDestination(x, y) {
 
 		this.destinations = [ new Phaser.Math.Vector2(x, y) ];
+
+		this.shipTargeting = undefined;
 
 	}
 
@@ -35,12 +38,50 @@ class Ship extends Phaser.GameObjects.Container {
 		}
 		this.desiredAngles = [ angle ];
 
+		this.shipTargeting = undefined;
+	}
+
+	setTarget(enemy) {
+
+		const x = this.destinations.length ? this.destinations[0].x : this.x;
+		const y = this.destinations.length ? this.destinations[0].y : this.y;
+
+		// clear existing waypoints
+		this.destinations = [];
+		this.desiredAngles = [];
+
+		this.shipTargeting = {
+			enemy: enemy,
+			dx: x - enemy.x,
+			dy: y - enemy.y,
+			angle: Phaser.Math.Angle.Between(x, y, enemy.x, enemy.y)
+		};
+
 	}
 
 	update() {
 
 		let arrived = false;
 		let rotated = false;
+
+		if (this.shipTargeting) {
+
+			const destination = this.destinations.length ? this.destinations[0] : new Phaser.Math.Vector2(0, 0);
+
+			destination.x = this.shipTargeting.enemy.x + this.shipTargeting.dx;
+			destination.y = this.shipTargeting.enemy.y + this.shipTargeting.dy;
+
+			if (this.destinations.length == 0) {
+				this.destinations.push(destination);
+			}
+
+			if (this.desiredAngles.length == 0) {
+				this.desiredAngles.push(this.shipTargeting.angle);
+			} 
+			else {
+				this.desiredAngles[0] = this.shipTargeting.angle;
+			}
+		}
 
 		if (this.destinations.length) {
 

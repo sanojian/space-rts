@@ -28,4 +28,5 @@ class PlayerShip extends Ship {
 	isSelected() {
 		return this.highlight.visible;
 	}
+	
 }
