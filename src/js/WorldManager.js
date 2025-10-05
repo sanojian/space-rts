@@ -26,7 +26,14 @@ class WorldManager {
 			const ship = this.ships[i];
 
 			if (ship.isSelected()) {
-				ship.setDestination(x, y);
+
+				if (this.scene.keyInputs.keySHIFT.isDown) {
+					// add waypoint
+					ship.destinations.push(new Phaser.Math.Vector2(x, y));
+				}
+				else {
+					ship.setDestination(x, y);
+				}
 			}
 		}
 
@@ -38,7 +45,14 @@ class WorldManager {
 			const ship = this.ships[i];
 
 			if (ship.isSelected()) {
-				ship.setDesiredAngle(angle);
+
+				if (this.scene.keyInputs.keySHIFT.isDown) {
+					// add waypoint
+					ship.desiredAngles.push(angle);
+				}
+				else {
+					ship.setDesiredAngle(angle);
+				}
 			}
 		}
 		
@@ -63,12 +77,12 @@ class WorldManager {
 		for (let i = 0; i < this.ships.length; i++) {
 			const ship = this.ships[i];
 
-			if (ship.destinations.length || ship.desiredAngles.length) {
-				
-				const x = (ship.destinations.length ? ship.destinations[0].x : ship.x) - this.scene.cameras.main.scrollX;
-				const y = (ship.destinations.length ? ship.destinations[0].y : ship.y) - this.scene.cameras.main.scrollY;
+			for (let j = 0; j < ship.destinations.length; j++) {
 
-				const angle = ship.desiredAngles.length ?  ship.desiredAngles[0] : ship.rotation;
+				const x = ship.destinations[j].x - this.scene.cameras.main.scrollX;
+				const y = ship.destinations[j].y - this.scene.cameras.main.scrollY;
+
+				const angle = ship.desiredAngles[j];
 
 				this.scene.playfield.moveTo(x, y);
 				this.scene.playfield.lineTo(x + 60 * Math.cos(angle), y + 60 * Math.sin(angle));
@@ -76,6 +90,7 @@ class WorldManager {
 				this.scene.playfield.strokePath();
 
 			}
+
 		}
 
 	}

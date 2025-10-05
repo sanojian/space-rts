@@ -18,6 +18,10 @@ class PlayScene extends Phaser.Scene {
 
 		this.worldMan = new WorldManager(this);
 
+		this.keyInputs = {
+			keySHIFT: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT),
+		};
+			
 		this.createInteractiveArea();
 
 		this.worldMan.ships.push(new PlayerShip(this, 100, 100, 'ship_player'));
@@ -72,6 +76,10 @@ class PlayScene extends Phaser.Scene {
 					// make sure angle was deliberate
 					if (dist > 60) {
 						this.worldMan.setDesiredAngle(angle);
+					}
+					else {
+						// keep exisint rotation
+						this.worldMan.setDesiredAngle();
 					}
 				}
 

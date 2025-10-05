@@ -29,6 +29,10 @@ class Ship extends Phaser.GameObjects.Container {
 
 	setDesiredAngle(angle) {
 
+		if (angle === undefined) {
+			// use existing angle
+			angle = this.rotation;
+		}
 		this.desiredAngles = [ angle ];
 
 	}
