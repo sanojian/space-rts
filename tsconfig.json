@@ -1,0 +1,16 @@
+{
+  "include": [
+    "src/js/**/*.js",
+    "src/ts/**/*.ts",
+    "dist/lib/SinkPhysics.js"
+  ],
+  "compilerOptions": {
+    "pretty": false,
+    "noEmit": true,
+    "allowJs": true,
+    "checkJs": true,
+    "alwaysStrict": true,
+    "lib": ["ES2016", "DOM"],
+    "target": "ES6"
+  }
+}

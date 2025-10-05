@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>Space RTS</title>
+
+	<script type="text/javascript" src="./lib/phaser_3.90.js"></script>
+
+	<style>
+		body, html { 
+			margin:0; 
+			padding: 0; 
+			overflow:hidden;
+			background-color: #231841;
+
+			/*display: flex;
+			justify-content: center;
+			align-items: center;*/
+		}
+		
+		canvas {
+			display: block;
+			margin: auto;
+		}
+
+		/* for detecting iPhone notch */
+		:root {
+    		--sat: env(safe-area-inset-top);
+		}
+
+
+	</style>
+	
+	<script>
+		// for server compatibility
+		var module = {};
+	</script>
+	<script type="text/javascript" src="./js/game.js"></script>
+
+</head>
+<body onload="initGame()">
+
+
+</body>

@@ -1,0 +1,22 @@
+{
+	"name": "rs-hockey",
+	"version": "0.0.1",
+	"private": true,
+	"devDependencies": {
+		"google-closure-compiler": "*",
+		"grunt": "1.5.3",
+		"grunt-closure-tools": "*",
+		"grunt-contrib-clean": "2.0.1",
+		"grunt-contrib-concat": "2.1.0",
+		"grunt-contrib-copy": "1.0.0",
+		"grunt-contrib-obfuscator": "^8.0.0",
+		"grunt-contrib-watch": "1.1.0",
+		"grunt-develop": "0.4.0",
+		"grunt-http-server": "2.1.0",
+		"javascript-obfuscator": "^4.1.1",
+		"matchdep": "2.0.0"
+	},
+	"dependencies": {
+		"grunt-cli": "^1.4.3"
+	}
+}
