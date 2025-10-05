@@ -32,6 +32,7 @@ class BootScene extends Phaser.Scene {
 	loadAssets() {
 
 		this.load.image('ship_player', 'gfx/ship_player_1.png');
+		this.load.image('ship_enemy', 'gfx/ship_enemy_1.png');
 		this.load.image('ship_player_highlight', 'gfx/ship_player_1_highlight.png');
 
 		this.load.start();

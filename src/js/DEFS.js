@@ -7,6 +7,8 @@ const DEFS = {
 	DEBUG: false,
 	VERSION: '0.0.1',
 	FONT: 'PressStart2P',
+	TARGET_FPS: 65,
+	
 
 	MULTIPLAYER: false,
 

@@ -20,8 +20,9 @@ class PlayScene extends Phaser.Scene {
 
 		this.createInteractiveArea();
 
-		this.worldMan.ships.push(new Ship(this, 100, 100, 'ship_player'));
-		this.worldMan.ships.push(new Ship(this, 300, 500, 'ship_player'));
+		this.worldMan.ships.push(new PlayerShip(this, 100, 100, 'ship_player'));
+		this.worldMan.ships.push(new PlayerShip(this, 300, 500, 'ship_player'));
+		this.worldMan.enemies.push(new EnemyShip(this, 500, 400, 'ship_player'));
 
 		this.scene.launch('ui');
 
@@ -39,7 +40,10 @@ class PlayScene extends Phaser.Scene {
 		const canvasW = this.sys.game.canvas.width;
 		const canvasH = this.sys.game.canvas.height;
 
-		const playfield = this.add.graphics({ fillStyle: { color: 0x000000 } });
+		const playfield = this.add.graphics({
+			fillStyle: { color: 0x000000 },
+			lineStyle: { color: 0x00ff00, width: 1 }
+		});
 		const rect = new Phaser.Geom.Rectangle(0, 0, canvasW, canvasH);
 		this.playfield = playfield;
 
@@ -47,11 +51,29 @@ class PlayScene extends Phaser.Scene {
 			.fillRectShape(rect)
 			.setInteractive(rect, Phaser.Geom.Rectangle.Contains)
 			.setScrollFactor(0)
-			.setAlpha(0.01);
+			.setDataEnabled()
+			.setAlpha(1);
 
-		playfield.on('pointerdown', (pointer) => {
-			console.log(pointer.worldX)
-		})
+		playfield
+			.on('pointerdown', (pointer) => {
+				this.worldMan.setDestination(pointer.worldX, pointer.worldY);
+
+				playfield.data.set('isDrawing', true);
+				playfield.data.set('currentPoint', new Phaser.Math.Vector2(pointer.x, pointer.y));
+			})
+			.on('pointerup', (pointer) => {
+
+				if (this.playfield.data.get('isDrawing')) {
+
+					const currentPoint = this.playfield.data.get('currentPoint');
+					const angle = Phaser.Math.Angle.BetweenPoints(currentPoint, pointer);
+
+					this.worldMan.setDesiredAngle(angle);
+				}
+
+				playfield.data.set('isDrawing', false);
+
+			});
 	}
 
 	startGame() {
@@ -73,7 +95,18 @@ class PlayScene extends Phaser.Scene {
 			this.lastUpdate = now;
 		}
 
+		// update playfield
+		this.playfield.clear();
 
+		if (this.playfield.data.get('isDrawing')) {
+
+			const currentPoint = this.playfield.data.get('currentPoint');
+
+			this.playfield.moveTo(currentPoint.x, currentPoint.y);
+			this.playfield.lineTo(this.input.activePointer.x, this.input.activePointer.y);
+
+			this.playfield.strokePath();
+		}
 	}
 
 
