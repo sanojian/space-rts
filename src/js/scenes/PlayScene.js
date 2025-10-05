@@ -21,6 +21,7 @@ class PlayScene extends Phaser.Scene {
 		this.keyInputs = {
 			keySHIFT: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT),
 		};
+		this.input.mouse.disableContextMenu();
 			
 		this.createInteractiveArea();
 
@@ -60,31 +61,57 @@ class PlayScene extends Phaser.Scene {
 
 		playfield
 			.on('pointerdown', (pointer) => {
-				this.worldMan.setDestination(pointer.worldX, pointer.worldY);
 
-				playfield.data.set('isDrawing', true);
-				playfield.data.set('currentPoint', new Phaser.Math.Vector2(pointer.x, pointer.y));
+				if (pointer.rightButtonDown()) {
+					playfield.data.set('dragScreenOrigin', new Phaser.Math.Vector2(pointer.x, pointer.y));
+				}
+				else {
+					this.worldMan.setDestination(pointer.worldX, pointer.worldY);
+
+					playfield.data.set('isDrawing', true);
+					playfield.data.set('currentPoint', new Phaser.Math.Vector2(pointer.x, pointer.y));
+				}
+			})
+			.on('pointermove', (pointer) => {
+
+				if (pointer.rightButtonDown()) {
+
+					const dragScreenOrigin = playfield.data.get('dragScreenOrigin');
+
+					this.cameras.main.setScroll(
+						this.cameras.main.scrollX + (dragScreenOrigin.x - pointer.x),
+						this.cameras.main.scrollY + (dragScreenOrigin.y - pointer.y)
+					);
+
+					playfield.data.set('dragScreenOrigin', new Phaser.Math.Vector2(pointer.x, pointer.y));
+
+				}
+
 			})
 			.on('pointerup', (pointer) => {
 
-				if (this.playfield.data.get('isDrawing')) {
+				if (pointer.rightButtonDown()) {
 
-					const currentPoint = this.playfield.data.get('currentPoint');
-					const angle = Phaser.Math.Angle.BetweenPoints(currentPoint, pointer);
-					const dist = Phaser.Math.Distance.BetweenPoints(currentPoint, pointer);
-
-					// make sure angle was deliberate
-					if (dist > 60) {
-						this.worldMan.setDesiredAngle(angle);
-					}
-					else {
-						// keep exisint rotation
-						this.worldMan.setDesiredAngle();
-					}
 				}
+				else {
+					if (this.playfield.data.get('isDrawing')) {
 
-				playfield.data.set('isDrawing', false);
+						const currentPoint = this.playfield.data.get('currentPoint');
+						const angle = Phaser.Math.Angle.BetweenPoints(currentPoint, pointer);
+						const dist = Phaser.Math.Distance.BetweenPoints(currentPoint, pointer);
 
+						// make sure angle was deliberate
+						if (dist > 60) {
+							this.worldMan.setDesiredAngle(angle);
+						}
+						else {
+							// keep exisint rotation
+							this.worldMan.setDesiredAngle();
+						}
+					}
+
+					playfield.data.set('isDrawing', false);
+				}
 			});
 	}
 
