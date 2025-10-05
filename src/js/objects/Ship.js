@@ -15,37 +15,42 @@ class Ship extends Phaser.GameObjects.Container {
 
 		this.speed = 3;
 		this.angularSpeed = 0.01;
-		this.destination = undefined;
-		this.desiredAngle = undefined;
+		
+		this.destinations = [];
+		this.desiredAngles = [];
 
 	}
 
 	setDestination(x, y) {
 
-		this.destination = new Phaser.Math.Vector2(x, y);
+		this.destinations = [ new Phaser.Math.Vector2(x, y) ];
 
 	}
 
 	setDesiredAngle(angle) {
 
-		this.desiredAngle = angle;
+		this.desiredAngles = [ angle ];
 
 	}
 
 	update() {
 
-		if (this.destination) {
+		let arrived = false;
+		let rotated = false;
 
-			const dist = Phaser.Math.Distance.BetweenPoints(this, this.destination);
+		if (this.destinations.length) {
+
+			const destination = this.destinations[0];
+			const dist = Phaser.Math.Distance.BetweenPoints(this, destination);
 
 			if (dist < this.speed) {
 				// arrived
-				this.setPosition(this.destination.x, this.destination.y);
-				delete this.destination;
+				this.setPosition(destination.x, destination.y);
+				arrived = true;
 			}
 			else {
 				// move towards destination
-				const angle = Phaser.Math.Angle.BetweenPoints(this, this.destination);
+				const angle = Phaser.Math.Angle.BetweenPoints(this, destination);
 
 				this.setPosition(
 					this.x + this.speed * Math.cos(angle),
@@ -55,19 +60,26 @@ class Ship extends Phaser.GameObjects.Container {
 
 		}
 
-		if (this.desiredAngle !== undefined) {
+		if (this.desiredAngles.length) {
 
-			const diff = GLOBAL.Utils.getDeltaAngle(this.rotation, this.desiredAngle);
+			const desiredAngle = this.desiredAngles[0];
+			const diff = GLOBAL.Utils.getDeltaAngle(this.rotation, desiredAngle);
 
 			if (Math.abs(diff) < this.angularSpeed) {
 				// angle achieved
-				this.setRotation(this.desiredAngle);
-				delete this.desiredAngle;
+				this.setRotation(desiredAngle);
+				rotated = true;
 			}
 			else {
 				// rotate
 				this.setRotation(this.rotation + Math.sign(diff) * this.angularSpeed);
 			}
+		}
+
+		if (arrived && rotated) {
+			// remove waypoint
+			this.destinations.shift();
+			this.desiredAngles.shift();
 		}
 
 	}

@@ -63,12 +63,12 @@ class WorldManager {
 		for (let i = 0; i < this.ships.length; i++) {
 			const ship = this.ships[i];
 
-			if (ship.destination || ship.desiredAngle != undefined) {
+			if (ship.destinations.length || ship.desiredAngles.length) {
 				
-				const x = (ship.destination ? ship.destination.x : ship.x) - this.scene.cameras.main.scrollX;
-				const y = (ship.destination ? ship.destination.y : ship.y) - this.scene.cameras.main.scrollY;
+				const x = (ship.destinations.length ? ship.destinations[0].x : ship.x) - this.scene.cameras.main.scrollX;
+				const y = (ship.destinations.length ? ship.destinations[0].y : ship.y) - this.scene.cameras.main.scrollY;
 
-				const angle = ship.desiredAngle == undefined ? ship.rotation : ship.desiredAngle;
+				const angle = ship.desiredAngles.length ?  ship.desiredAngles[0] : ship.rotation;
 
 				this.scene.playfield.moveTo(x, y);
 				this.scene.playfield.lineTo(x + 60 * Math.cos(angle), y + 60 * Math.sin(angle));

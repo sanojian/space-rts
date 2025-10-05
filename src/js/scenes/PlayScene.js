@@ -67,8 +67,12 @@ class PlayScene extends Phaser.Scene {
 
 					const currentPoint = this.playfield.data.get('currentPoint');
 					const angle = Phaser.Math.Angle.BetweenPoints(currentPoint, pointer);
+					const dist = Phaser.Math.Distance.BetweenPoints(currentPoint, pointer);
 
-					this.worldMan.setDesiredAngle(angle);
+					// make sure angle was deliberate
+					if (dist > 60) {
+						this.worldMan.setDesiredAngle(angle);
+					}
 				}
 
 				playfield.data.set('isDrawing', false);
