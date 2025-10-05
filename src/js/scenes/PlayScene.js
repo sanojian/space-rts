@@ -95,18 +95,6 @@ class PlayScene extends Phaser.Scene {
 			this.lastUpdate = now;
 		}
 
-		// update playfield
-		this.playfield.clear();
-
-		if (this.playfield.data.get('isDrawing')) {
-
-			const currentPoint = this.playfield.data.get('currentPoint');
-
-			this.playfield.moveTo(currentPoint.x, currentPoint.y);
-			this.playfield.lineTo(this.input.activePointer.x, this.input.activePointer.y);
-
-			this.playfield.strokePath();
-		}
 	}
 
 
