@@ -12,11 +12,11 @@
 
 1. Pull the source
 
-        git clone git@gitlab.gamee.io:games/jonas/bayc-pool.git
+        git clone git@github.com:sanojian/space-rts.git
 
 2. Use the project working directory
 
-        cd bayc-pool
+        cd space-rts
 
 3. Install the development modules
 
